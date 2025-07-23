@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#BFA2DB">
+    <title>HealthWise</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <h1>💜 HealthWise</h1>
+            <p>Loading with love...</p>
+        </div>
+    </div>
+
+    <!-- Welcome Screen (First Time Only) -->
+    <div id="welcome-screen" class="screen" style="display: none;">
+        <div class="welcome-container">
+            <h1>💜 Welcome to HealthWise</h1>
+            <div class="welcome-message">
+                <p>Hi Colleen, my mission is to help get and keep you healthy! Bcuz you are NEEDED and LOVED!</p>
+                <p>I'll walk with you each day—one meal, one step, one breath at a time.</p>
+            </div>
+            <button class="btn-primary" onclick="completeOnboarding()">Start Your Journey 💜</button>
+            <p class="privacy-note">All your data stays on your phone • No internet required</p>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="app-container" style="display: none;">
+        <!-- Header -->
+        <header class="app-header">
+            <h1>HealthWise</h1>
+            <div class="header-date" id="current-date"></div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="main-content">
+            <!-- Home Screen -->
+            <div id="home-screen" class="screen active">
+                <div class="greeting-card">
+                    <h2>Hi Colleen! 💜</h2>
+                    <p>Remember: You are NEEDED and LOVED!</p>
+                </div>
+
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <span class="stat-icon">🍽️</span>
+                        <span class="stat-label">Meals Today</span>
+                        <span class="stat-value" id="meals-completed">0/7</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">💧</span>
+                        <span class="stat-label">Hydration</span>
+                        <span class="stat-value" id="hydration-oz">0 oz</span>
+                    </div>
+                </div>
+
+                <div class="home-actions">
+                    <button class="action-card" onclick="showScreen('meals-screen')">
+                        <span class="action-icon">🍽️</span>
+                        <span class="action-title">Today's Meals</span>
+                        <span class="action-subtitle">View schedule & log meals</span>
+                    </button>
+
+                    <button class="action-card" onclick="showScreen('tracker-screen')">
+                        <span class="action-icon">📊</span>
+                        <span class="action-title">Daily Tracker</span>
+                        <span class="action-subtitle">Log glucose, symptoms & meds</span>
+                    </button>
+
+                    <button class="action-card" onclick="showScreen('export-screen')">
+                        <span class="action-icon">📧</span>
+                        <span class="action-title">Export for Doctor</span>
+                        <span class="action-subtitle">Email your health logs</span>
+                    </button>
+
+                    <button class="action-card" onclick="showScreen('settings-screen')">
+                        <span class="action-icon">⚙️</span>
+                        <span class="action-title">Settings</span>
+                        <span class="action-subtitle">Notifications & preferences</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Meals Screen -->
+            <div id="meals-screen" class="screen" style="display: none;">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">← Back</button>
+                    <h2>Today's Meals</h2>
+                </div>
+                
+                <div class="meals-container" id="meals-list">
+                    <!-- Meals will be dynamically inserted here -->
+                </div>
+            </div>
+
+            <!-- Tracker Screen -->
+            <div id="tracker-screen" class="screen" style="display: none;">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">← Back</button>
+                    <h2>Daily Tracker</h2>
+                </div>
+
+                <div class="tracker-form">
+                    <!-- Glucose Tracking -->
+                    <div class="tracker-section">
+                        <h3>🩸 Blood Sugar</h3>
+                        <div class="input-group">
+                            <input type="number" id="glucose-value" placeholder="Enter reading">
+                            <select id="glucose-time">
+                                <option value="">When?</option>
+                                <option value="before-meal">Before Meal</option>
+                                <option value="after-meal">After Meal</option>
+                                <option value="fasting">Fasting</option>
+                                <option value="bedtime">Bedtime</option>
+                            </select>
+                            <button class="btn-add" onclick="addGlucoseReading()">Add</button>
+                        </div>
+                        <div id="glucose-readings" class="readings-list"></div>
+                    </div>
+
+                    <!-- Hydration Tracking -->
+                    <div class="tracker-section">
+                        <h3>💧 Hydration</h3>
+                        <div class="hydration-buttons">
+                            <button class="hydration-btn" onclick="addHydration(8)">+8 oz</button>
+                            <button class="hydration-btn" onclick="addHydration(16)">+16 oz</button>
+                            <button class="hydration-btn" onclick="addHydration(4)">+4 oz</button>
+                        </div>
+                        <div class="hydration-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="hydration-progress"></div>
+                            </div>
+                            <span id="hydration-total">0 / 64 oz</span>
+                        </div>
+                    </div>
+
+                    <!-- Symptoms -->
+                    <div class="tracker-section">
+                        <h3>🌡️ How are you feeling?</h3>
+                        <div class="symptom-buttons">
+                            <button class="symptom-btn" data-symptom="good" onclick="toggleSymptom(this)">😊 Good</button>
+                            <button class="symptom-btn" data-symptom="tired" onclick="toggleSymptom(this)">😴 Tired</button>
+                            <button class="symptom-btn" data-symptom="nausea" onclick="toggleSymptom(this)">🤢 Nausea</button>
+                            <button class="symptom-btn" data-symptom="pain" onclick="toggleSymptom(this)">😣 Pain</button>
+                        </div>
+                        <textarea id="symptom-notes" placeholder="Any other notes?" rows="3"></textarea>
+                    </div>
+
+                    <!-- Medications -->
+                    <div class="tracker-section">
+                        <h3>💊 Medications</h3>
+                        <div class="med-checkboxes" id="med-list">
+                            <!-- Will be populated based on user's med list -->
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="saveTrackerData()">Save All</button>
+                </div>
+            </div>
+
+            <!-- Export Screen -->
+            <div id="export-screen" class="screen" style="display: none;">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">← Back</button>
+                    <h2>Export Health Logs</h2>
+                </div>
+
+                <div class="export-options">
+                    <h3>Select Date Range</h3>
+                    <div class="date-inputs">
+                        <input type="date" id="export-start" value="">
+                        <span>to</span>
+                        <input type="date" id="export-end" value="">
+                    </div>
+
+                    <h3>Export Format</h3>
+                    <div class="format-buttons">
+                        <button class="format-btn active" data-format="pdf" onclick="selectFormat(this)">📄 PDF</button>
+                        <button class="format-btn" data-format="csv" onclick="selectFormat(this)">📊 CSV</button>
+                    </div>
+
+                    <button class="btn-primary" onclick="generateExport()">📧 Email to Doctor</button>
+
+                    <div class="export-preview" id="export-preview" style="display: none;">
+                        <h3>Preview</h3>
+                        <div id="preview-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Screen -->
+            <div id="settings-screen" class="screen" style="display: none;">
+                <div class="screen-header">
+                    <button class="back-btn" onclick="showScreen('home-screen')">← Back</button>
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="settings-container">
+                    <div class="setting-section">
+                        <h3>🔔 Meal Reminders</h3>
+                        <div class="setting-item">
+                            <span>Enable meal notifications</span>
+                            <button class="toggle-btn" id="notification-toggle" onclick="toggleNotifications()">Off</button>
+                        </div>
+                        <p class="setting-note">Get reminded at each meal time</p>
+                    </div>
+
+                    <div class="setting-section">
+                        <h3>👤 Personal Info</h3>
+                        <div class="setting-item">
+                            <span>Name</span>
+                            <input type="text" id="user-name" value="Colleen" onchange="updateUserName()">
+                        </div>
+                    </div>
+
+                    <div class="setting-section">
+                        <h3>💊 Medications</h3>
+                        <div id="med-settings-list">
+                            <!-- Medications list will be populated here -->
+                        </div>
+                        <button class="btn-secondary" onclick="addMedication()">+ Add Medication</button>
+                    </div>
+
+                    <div class="setting-section">
+                        <h3>🗓️ Data Management</h3>
+                        <button class="btn-secondary" onclick="clearOldData()">Clear Data Older Than 30 Days</button>
+                        <button class="btn-secondary danger" onclick="resetApp()">Reset All Data</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="showScreen('home-screen')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Home</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('meals-screen')">
+                <span class="nav-icon">🍽️</span>
+                <span class="nav-label">Meals</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('tracker-screen')">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Track</span>
+            </button>
+            <button class="nav-item" onclick="showScreen('export-screen')">
+                <span class="nav-icon">📧</span>
+                <span class="nav-label">Export</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Meal Options Modal -->
+    <div id="meal-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-meal-time"></h3>
+                <button class="close-btn" onclick="closeMealModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div id="meal-options" class="meal-options">
+                    <!-- Meal options will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# HealthWise PWA - File Structure
+
+## ✅ Required Files for PWA (Keep these in root):
+
+1. **index.html** - Main app file ✓
+2. **styles.css** - All the styling ✓
+3. **app.js** - Application logic ✓
+4. **manifest.json** - PWA configuration ✓
+5. **service-worker.js** - Offline functionality ✓
+6. **README.md** - Documentation ✓
+7. **icon-192.png** - Small app icon (need to create)
+8. **icon-512.png** - Large app icon (need to create)
+
+## 📁 Files to Archive:
+
+All .dart files (Flutter code)
+All directories except _ARCHIVE_Flutter_Files
+Other files like:
+- 1index.html (old version)
+- pubspec.yaml
+- healthwise_meal_templates.json
+- HealthWise_PRD.docx
+
+## 🚀 Next Steps:
+
+1. Run `cleanup_all.bat` to move Flutter files
+2. Open `icon-generator.html` and save the two icons
+3. Delete cleanup files (cleanup.bat, cleanup_all.bat, cleanup_healthwise.py)
+4. Upload these 8 files to GitHub:
+   - index.html
+   - styles.css
+   - app.js
+   - manifest.json
+   - service-worker.js
+   - README.md
+   - icon-192.png
+   - icon-512.png
+
+That's it! Your PWA will be ready.
